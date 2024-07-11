@@ -24,10 +24,13 @@ export const getCollection = (
   if (permalink && state.collections.permalinks[permalink]) {
     props.id = state.collections.permalinks[permalink]
   }
-  return getEntry(state, {
+  // console.log('REED', { permalink, props })
+  const a = getEntry(state, {
     ...props,
     kind: Kind.COLLECTIONS
   })
+  // console.log('REED result from getEntry', { a })
+  return a
 }
 export const getStatus = (state: CommonState, props: { id: ID }) =>
   state.collections.statuses[props.id] || null

@@ -56,6 +56,7 @@ export const useFetchCollectionLineup = (
     }, {})
 
   const collectionTracks = useSelector(getCollectionTracksLineup)
+  // console.log('REED hook', { collectionTracks })
   const collectionTrackUidMap = collectionTracks.entries.reduce(
     (acc, track) => {
       if (acc[track.id] && acc[track.id].includes(track.id)) {

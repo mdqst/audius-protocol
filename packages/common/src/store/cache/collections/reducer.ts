@@ -18,6 +18,7 @@ const initialState = {
 }
 
 const addEntries = (state: CollectionsCacheState, entries: any[]) => {
+  console.log('REED in add entries', { entries })
   const newPermalinks: Record<string, ID> = {}
 
   // Add uids to track info in playlist_contents
@@ -38,7 +39,7 @@ const addEntries = (state: CollectionsCacheState, entries: any[]) => {
 
   for (const entry of entries) {
     const { playlist_id, permalink } = entry.metadata
-
+    console.log('REED in addEntries', { entry })
     if (permalink) {
       newPermalinks[permalink.toLowerCase()] = playlist_id
     }
@@ -64,11 +65,12 @@ const actionsMap = {
   [ADD_ENTRIES](
     state: CollectionsCacheState,
     action: AddEntriesAction<Collection>,
-    kind: Kind
+    kind: Kind = Kind.COLLECTIONS
   ) {
     const { entriesByKind } = action
     const matchingEntries = entriesByKind[kind]
 
+    console.log('REED', { matchingEntries, kind, entriesByKind })
     if (!matchingEntries) return state
     return addEntries(state, matchingEntries)
   },

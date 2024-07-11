@@ -1,4 +1,5 @@
 /** Helper Sagas */
+import { collectionPageSelectors } from '~/store'
 
 import { eventChannel, END, EventChannel } from 'redux-saga'
 import { ActionPattern } from 'redux-saga/effects'
@@ -18,6 +19,7 @@ import { waitForReachability } from '~/store/reachability/sagas'
 
 import { Status } from '../models/Status'
 
+const { getCollection } = collectionPageSelectors
 /**
  * Calls the provided array of calls in batches with delayMs milliseconds between each batch.
  */
@@ -72,6 +74,9 @@ export function* waitForValue(
   customCheck?: (value: any) => boolean
 ) {
   let value = yield* select(selector, args)
+  let collection = yield* select(getCollection)
+  // console.log('REED collection', { collection })
+  // console.log('REED', { value })
   while (customCheck ? !customCheck(value) : !value) {
     yield* take()
     value = yield* select(selector, args)

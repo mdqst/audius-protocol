@@ -52,6 +52,10 @@ function* watchFetchCollection() {
     }
     const identifier = collectionId || permalink
     const collection = collections[identifier]
+    console.log('REED saga', {
+      collection,
+      playlist_contents: collection.playlist_contents
+    })
     const userUid = makeUid(Kind.USERS, collection.playlist_owner_id)
     const collectionUid = collectionUids[identifier]
     if (collection) {

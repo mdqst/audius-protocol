@@ -33,6 +33,7 @@ export const getCollection = (
   }
 
   const permalink = getCollectionPermalink(state)
+  // console.log('REED', { permalink })
   if (permalink) {
     return getCachedCollection(state, { permalink })
   } else {

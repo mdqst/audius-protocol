@@ -1130,9 +1130,11 @@ export class AudiusAPIClient {
 
     if (!response) return []
 
+    // console.log('REED BEFORE makePlaylist', { data: response?.data })
     const adapted = response.data
       .map(adapter.makePlaylist)
       .filter(removeNullable)
+    // console.log('REED AFTER makePlaylist', { adapted: adapted })
     return adapted
   }
 

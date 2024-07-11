@@ -1,11 +1,12 @@
 import { useCallback, useContext, useState } from 'react'
+import type { Entry } from '~/store/cache/types'
 
 import { ResponseError } from '@audius/sdk'
 import { CaseReducerActions, createSlice } from '@reduxjs/toolkit'
 import retry from 'async-retry'
 import { produce } from 'immer'
-import { isEqual, mapValues } from 'lodash'
-import { denormalize, normalize } from 'normalizr'
+import { isEqual, map, mapValues, omit, omitBy, pickBy } from 'lodash'
+import { denormalize, normalize, schema } from 'normalizr'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDebounce } from 'react-use'
 import { Dispatch } from 'redux'
@@ -357,6 +358,9 @@ const fetchData = async <Args, Data>(
         apiResponseSchema
       )
 
+      console.log('REED', { schemaKey: endpoint.options.schemaKey })
+      console.log('REED', { entities })
+      console.log('REED', { result })
       // Format entities before adding to cache
       entities[Kind.USERS] = mapValues(
         entities[Kind.USERS] ?? [],
@@ -371,7 +375,38 @@ const fetchData = async <Args, Data>(
             omitUser: false
           })
       )
-      dispatch(addEntries(entities))
+
+      const idMap = {
+        [Kind.USERS]: 'user_id',
+        [Kind.COLLECTIONS]: 'playlist_id',
+        [Kind.TRACKS]: 'track_id'
+      }
+
+      const res: { [key: string]: Entry[] } = {}
+      for (let kind of Object.keys(entities)) {
+        console.log('REED', { kind })
+        const entitiesArray = entities[kind]
+        const asdf = Object.values(entitiesArray ?? {}).map(
+          (entity: Metadata) => {
+            // @ts-ignore
+            const id = entity[idMap[kind]]
+            return { id, metadata: entity }
+          }
+        )
+
+        console.log('REED', { kind, entitiesArray, asdf })
+        if (asdf) res[kind] = asdf
+      }
+
+      //   const entitiesArrays = mapValues(entities, (entityMap) => {
+      //     Object.values(entityMap ?? {}).map((entity) => {
+      //       const id = 'asdf'
+      //       return a
+      //       // return {id: entity.}
+      // })
+      // const nonEmpty = pickBy(entitiesArrays, (v) => v.length > 0)
+      // console.log('REED calling addEntries: ', { nonEmpty, entitiesArrays })
+      dispatch(addEntries(res))
       data = result
     } else {
       data = apiData

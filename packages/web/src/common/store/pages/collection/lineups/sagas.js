@@ -22,6 +22,7 @@ const {
 const { getCollection: getSmartCollection } = smartCollectionPageSelectors
 
 function* getCollectionTracks() {
+  console.log('REED in getCollectionTracks saga')
   const smartCollectionVariant = yield select(getSmartCollectionVariant)
   let collection
   if (smartCollectionVariant) {
@@ -29,10 +30,14 @@ function* getCollectionTracks() {
       variant: smartCollectionVariant
     })
   } else {
+    const collectionTest = yield select((state) => state.pages.collection)
+    console.log('REED collectionTest', { collectionTest })
     collection = yield call(waitForValue, getCollection)
+    console.log('REED after waitForValue', { collection })
   }
 
   const tracks = collection.playlist_contents.track_ids
+  console.log('REED tracks saga', { tracks })
 
   const trackIds = tracks.map((t) => t.track)
   // TODO: Conform all timestamps to be of the same format so we don't have to do any special work here.

@@ -45,12 +45,14 @@ const collectionApi = createApi({
         }: { permalink: string; currentUserId: Nullable<ID> },
         { apiClient }
       ) => {
-        return (
+        const a = (
           await apiClient.getPlaylistByPermalink({
             permalink,
             currentUserId
           })
         )[0]
+        // console.log('REED in audius-query hook', { a })
+        return a
       },
       options: {
         permalinkArgKey: 'permalink',
