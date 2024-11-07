@@ -37,6 +37,11 @@ func main() {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
+	hostUrl, err := url.Parse(os.Getenv("creatorNodeEndpoint"))
+	if err != nil {
+		log.Fatalf("Could not parse endpoint url: %v", err)
+	}
+
 	// make it work out of the box with no config
 	delegatePrivateKey := os.Getenv("delegatePrivateKey")
 	if delegatePrivateKey == "" {
@@ -47,7 +52,7 @@ func main() {
 	}
 
 	go func() {
-		if err := startEchoProxyWithOptionalTLS(tlsEnabled); err != nil {
+		if err := startEchoProxyWithOptionalTLS(hostUrl, tlsEnabled); err != nil {
 			log.Fatalf("Echo server failed: %v", err)
 			cancel()
 		}
@@ -85,7 +90,7 @@ func main() {
 	logger.Info("Shutdown complete")
 }
 
-func startEchoProxyWithOptionalTLS(enableTLS bool) error {
+func startEchoProxyWithOptionalTLS(hostUrl *url.URL, enableTLS bool) error {
 	e := echo.New()
 
 	e.Use(middleware.Logger())
@@ -121,6 +126,7 @@ func startEchoProxyWithOptionalTLS(enableTLS bool) error {
 	e.Any("/*", echo.WrapHandler(mediorumProxy))
 
 	if enableTLS {
+		e.AutoTLSManager.HostPolicy = autocert.HostWhitelist(hostUrl.Hostname())
 		e.AutoTLSManager.Cache = autocert.DirCache("/data/var/www/.cache")
 		e.Pre(middleware.HTTPSRedirect())
 
