@@ -57,7 +57,6 @@ type OwnProps = Omit<
   | 'repostCount'
   | 'saveCount'
   | 'commentCount'
-  | 'coverArtSizes'
   | 'followeeReposts'
   | 'followeeSaves'
   | 'hasCurrentUserReposted'
@@ -118,7 +117,6 @@ const ConnectedTrackTile = ({
     followee_saves,
     has_current_user_reposted,
     has_current_user_saved,
-    _cover_art_sizes,
     activity_timestamp,
     _co_sign,
     is_scheduled_release: isScheduledRelease,
@@ -269,7 +267,6 @@ const ConnectedTrackTile = ({
       hasCurrentUserReposted={has_current_user_reposted}
       hasCurrentUserSaved={has_current_user_saved}
       duration={duration}
-      coverArtSizes={_cover_art_sizes}
       activityTimestamp={activity_timestamp}
       trackTileStyles={trackTileStyles}
       size={size}
