@@ -1,5 +1,19 @@
 # @audius/sdk
 
+## 7.2.0
+
+### Minor Changes
+
+- 6322f3e: Add user/<id>/playlists and user/<id>/albums
+- ba20259: Add support for new stream, download, and preview fields on tracks with mirrors
+
+### Patch Changes
+
+- 0aed18e: Move plays health back to where it was for now
+- 5303fb7: Fix concurrent getOrCreateUserBank requests
+- Updated dependencies [aef5021]
+  - @audius/eth@0.0.1
+
 ## 7.1.0
 
 ### Minor Changes
